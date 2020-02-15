@@ -36,8 +36,7 @@ public class ClientProcessor implements Runnable{
                 if(fisrtConnexion) {
                     login = read();
                     logins.add(login);
-                    ecritureEcran.println("Welcome " + login + "!");
-                    ecritureEcran.flush();
+                    send("Welcome " + login + "!");
                     fisrtConnexion = false;
                 }
 
@@ -49,25 +48,27 @@ public class ClientProcessor implements Runnable{
                 System.out.println("\n" + debug);
 
 
-                String toSend = "";
-                if(response.equals("quit".toLowerCase()))
-                    toSend = "Communication terminée";
 
-                else if(response.equals("getUtilisateursOnline")) {
+
+                if(response.equals("getUtilisateursOnline")) {
                     StringBuilder temp = new StringBuilder();
+                    temp.append("Client connecté(s): ");
                     for (String s : logins) {
                         temp.append(s).append(" | ");
                     }
-                    ecritureEcran.println(temp.toString());
-                    ecritureEcran.flush();
+                    send(temp.toString());
+                } else if(response.length() > 8 && response.substring(0, 8).equals("speakTo ")) {
+                    if(response.substring(8).equals(login)) {
+                        send(login);
+                    }
                 }
                 else {
-                    ecritureEcran.println(response);
-                    ecritureEcran.flush();
+                    send(response);
                 }
 
 
                 if(response.equals("quit".toLowerCase())){
+                    send("Connexion closed");
                     System.err.println("Connexion closed ");
                     deconnexionLogin();
                     reader = null;
@@ -89,6 +90,15 @@ public class ClientProcessor implements Runnable{
             if(logins.get(i).equals(login))
                 logins.remove(i);
         }
+    }
+
+    private void speakTo(String login) {
+
+    }
+
+    private void send(String message) {
+        ecritureEcran.println(message);
+        ecritureEcran.flush();
     }
 
     private String read() throws IOException{

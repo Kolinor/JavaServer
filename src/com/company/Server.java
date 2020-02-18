@@ -9,7 +9,7 @@ import java.util.ArrayList;
 public class Server {
     private int port;
     private String host;
-    private ServerSocket server;//ma bite
+    private ServerSocket server;
     private boolean isRunning;
     private int nbConnexionRunning;
     private int nbConnexionSim;

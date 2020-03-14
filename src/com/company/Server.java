@@ -13,7 +13,8 @@ public class Server {
     private boolean isRunning;
     private int nbConnexionRunning;
     private int nbConnexionSim;
-    private ArrayList<Thread> threads = new ArrayList<Thread>();
+    static public ArrayList<Thread> threads = new ArrayList<Thread>();
+    static public ArrayList<ClientProcessor> clients = new ArrayList<ClientProcessor>();
     private boolean change;
     static public ArrayList<String> logins = new ArrayList<String>();
 
@@ -59,7 +60,10 @@ public class Server {
                             Socket client = server.accept();
                             nbConnexionRunning++;
                             System.out.println("Connexion cliente reçue.");
-                            threads.add(new Thread(new ClientProcessor(client)));
+                            ClientProcessor tempClient = new ClientProcessor(client);
+                            threads.add(new Thread(tempClient));
+                            clients.add(tempClient);
+                            tempClient = null;
                             threads.get(threads.size()-1).start();
                         } catch (IOException e) {
                             e.printStackTrace();
